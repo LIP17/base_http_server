@@ -1,0 +1,22 @@
+# compiled class file
+*.class
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# build
+build/
+
+# Mac
+.DS_Store
+
+# Package
+*.war
+*.zip
+*.tar.gz
+
+# gradle
+.gradle/
