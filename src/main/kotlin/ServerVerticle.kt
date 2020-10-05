@@ -3,7 +3,7 @@ import io.vertx.reactivex.core.AbstractVerticle
 import io.vertx.reactivex.ext.web.Router
 import java.util.UUID
 
-class ServerVerticle: AbstractVerticle() {
+class ServerVerticle : AbstractVerticle() {
 
     private val VERTICLE_ID = UUID.randomUUID().toString()
 
@@ -13,7 +13,7 @@ class ServerVerticle: AbstractVerticle() {
 
         server
             .requestHandler(router)
-            .rxListen(8080).subscribe{ _ -> println("$VERTICLE_ID started in deployment ${deploymentID()}") }
+            .rxListen(8080).subscribe { _ -> println("$VERTICLE_ID started in deployment ${deploymentID()}") }
     }
 
     private fun configureRouting(): Router {
@@ -31,5 +31,4 @@ class ServerVerticle: AbstractVerticle() {
         router.mountSubRouter("/health", healthRouter)
         return router
     }
-
 }

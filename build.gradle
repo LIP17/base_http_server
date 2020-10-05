@@ -1,7 +1,12 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'distribution'
+    id 'application'
+    id 'org.jlleitschuh.gradle.ktlint' version '9.4.0'
 }
+
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -21,4 +26,9 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
     testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.0'
+}
+
+mainClassName = "Main"
+application {
+    mainClassName(mainClassName)
 }
