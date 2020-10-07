@@ -13,7 +13,7 @@ class ServerVerticle : AbstractVerticle() {
 
         server
             .requestHandler(router)
-            .rxListen(8080).subscribe { _ -> println("$VERTICLE_ID started in deployment ${deploymentID()}") }
+            .rxListen(80).subscribe { _ -> println("$VERTICLE_ID started in deployment ${deploymentID()}") }
     }
 
     private fun configureRouting(): Router {
