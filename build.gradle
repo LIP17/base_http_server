@@ -4,25 +4,39 @@ plugins {
     id 'distribution'
     id 'application'
     id 'org.jlleitschuh.gradle.ktlint' version '9.4.0'
+    id "org.jetbrains.kotlin.kapt" version '1.4.10'
 }
 
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
-group 'org.example'
+group 'lip17.base_http_server'
 version '1.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 
-    implementation group: 'io.vertx', name: 'vertx-web', version: '3.9.3'
-    implementation group: 'io.vertx', name: 'vertx-rx-java2', version: '3.9.3'
+    // vertex core
     implementation group: 'io.vertx', name: 'vertx-core', version: '3.9.3'
     implementation group: 'io.vertx', name: 'vertx-lang-kotlin', version: '3.9.3'
 
+    // vertx web
+    implementation group: 'io.vertx', name: 'vertx-web', version: '3.9.3'
+
+    // rx java
+    implementation group: 'io.vertx', name: 'vertx-rx-java2', version: '3.9.3'
+    implementation group: 'io.vertx', name: 'vertx-rx-java2-gen', version: '3.9.3'
+
+    implementation group: 'io.vertx', name: 'vertx-service-proxy', version: '3.9.3'
+    compileOnly group: 'io.vertx', name: 'vertx-codegen', version: '3.9.3'
+    kapt("io.vertx:vertx-codegen:3.9.3:processor") // in plugin, include kapt, with this and codegen dependency to generate proxy class
+
+    // test
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
     testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.0'
@@ -31,4 +45,8 @@ dependencies {
 mainClassName = "Main"
 application {
     mainClassName(mainClassName)
+}
+
+test {
+    useJUnitPlatform()
 }
