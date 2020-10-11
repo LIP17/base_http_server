@@ -1,15 +1,26 @@
-import io.vertx.core.DeploymentOptions
-import io.vertx.reactivex.core.AbstractVerticle
+import base_http_server.config.HealthServiceConfig
+import base_http_server.config.ServerConfig
 import io.vertx.reactivex.core.Vertx
 
-object Main : AbstractVerticle() {
+object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val vertX = Vertx.vertx()
-        vertX.rxDeployVerticle(
-            "ServerVerticle",
-            DeploymentOptions().setInstances(Runtime.getRuntime().availableProcessors())
-        ).subscribe { it -> println(it) }
+        val vertx = Vertx.vertx()
+
+        val healthServiceVerticle = vertx.rxDeployVerticle(
+            HealthServiceConfig.verticleCanonicalName,
+            HealthServiceConfig.deploymentOptions
+        )
+        val serverVerticle = vertx.rxDeployVerticle(
+            ServerConfig.verticleCanonicalName,
+            ServerConfig.deploymentOptions
+        )
+
+        healthServiceVerticle
+            .flatMap { serverVerticle }
+            .doOnSuccess { println("Deploy finished") }
+            .doOnError { e -> println("Deploy failed because ${e.message}") }
+            .subscribe()
     }
 }
