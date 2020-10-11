@@ -13,10 +13,3 @@ interface HealthService {
     @Fluent
     fun isAlive(handler: Handler<AsyncResult<Boolean>>): HealthService
 }
-
-object HealthServiceFactory {
-
-    
-
-
-}

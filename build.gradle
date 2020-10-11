@@ -18,6 +18,13 @@ repositories {
     mavenCentral()
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 

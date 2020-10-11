@@ -16,5 +16,5 @@ RUN ./gradlew clean installDist test ktlintCheck --no-daemon && \
 WORKDIR /home
 RUN rm -r app
 
-EXPOSE 80
+EXPOSE 8080
 ENTRYPOINT ["/home/entrypoint.sh", "/home/base_http_server/bin/base_http_server"]
