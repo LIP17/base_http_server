@@ -35,13 +35,13 @@ dependencies {
     // vertx web
     implementation group: 'io.vertx', name: 'vertx-web', version: '3.9.3'
 
-    // rx java
-    implementation group: 'io.vertx', name: 'vertx-rx-java2', version: '3.9.3'
-    implementation group: 'io.vertx', name: 'vertx-rx-java2-gen', version: '3.9.3'
-
+    // service proxy
     implementation group: 'io.vertx', name: 'vertx-service-proxy', version: '3.9.3'
     compileOnly group: 'io.vertx', name: 'vertx-codegen', version: '3.9.3'
     kapt("io.vertx:vertx-codegen:3.9.3:processor") // in plugin, include kapt, with this and codegen dependency to generate proxy class
+
+    // coroutine
+    implementation group: 'io.vertx', name: 'vertx-lang-kotlin-coroutines', version: '3.9.3'
 
     // test
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'

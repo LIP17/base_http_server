@@ -1,6 +1,10 @@
 import base_http_server.config.HealthServiceConfig
 import base_http_server.config.ServerConfig
-import io.vertx.reactivex.core.Vertx
+import io.vertx.core.Vertx
+import io.vertx.kotlin.core.deployVerticleAwait
+import io.vertx.kotlin.coroutines.dispatcher
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 object Main {
 
@@ -8,19 +12,16 @@ object Main {
     fun main(args: Array<String>) {
         val vertx = Vertx.vertx()
 
-        val healthServiceVerticle = vertx.rxDeployVerticle(
-            HealthServiceConfig.verticleCanonicalName,
-            HealthServiceConfig.deploymentOptions
-        )
-        val serverVerticle = vertx.rxDeployVerticle(
-            ServerConfig.verticleCanonicalName,
-            ServerConfig.deploymentOptions
-        )
+        GlobalScope.launch(vertx.dispatcher()) {
+            vertx.deployVerticleAwait(
+                HealthServiceConfig.verticleCanonicalName,
+                HealthServiceConfig.deploymentOptions
+            )
 
-        healthServiceVerticle
-            .flatMap { serverVerticle }
-            .doOnSuccess { println("Deploy finished") }
-            .doOnError { e -> println("Deploy failed because ${e.message}") }
-            .subscribe()
+            vertx.deployVerticleAwait(
+                ServerConfig.verticleCanonicalName,
+                ServerConfig.deploymentOptions
+            )
+        }
     }
 }

@@ -11,7 +11,7 @@ object HealthServiceFactory {
         return HealthServiceImpl()
     }
 
-    fun createProxy(vertx: Vertx, address: String): proxy.reactivex.HealthService {
-        return proxy.reactivex.HealthService(HealthServiceVertxEBProxy(vertx, address))
+    fun createProxy(vertx: Vertx, address: String): HealthService {
+        return HealthServiceVertxEBProxy(vertx, address)
     }
 }
