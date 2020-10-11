@@ -47,5 +47,4 @@ abstract class BaseVerticle : AbstractVerticle() {
     protected fun log(name: String, vararg pairs: Pair<String, Any>) {
         println("[${javaClass.simpleName}][$verticleId] $name, ${mapOf(*pairs)}")
     }
-
 }

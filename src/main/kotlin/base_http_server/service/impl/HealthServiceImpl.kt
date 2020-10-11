@@ -5,11 +5,10 @@ import io.vertx.core.Future
 import io.vertx.core.Handler
 import proxy.HealthService
 
-class HealthServiceImpl: HealthService {
+class HealthServiceImpl : HealthService {
 
     override fun isAlive(handler: Handler<AsyncResult<Boolean>>): HealthService {
         handler.handle(Future.succeededFuture(true))
         return this
     }
 }
-
