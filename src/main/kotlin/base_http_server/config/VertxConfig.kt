@@ -1,7 +1,7 @@
 package base_http_server.config
 
 import base_http_server.service.verticles.HealthServiceVerticle
-import base_http_server.service.verticles.ServerVerticle
+import base_http_server.service.verticles.HttpServerVerticle
 import io.vertx.core.DeploymentOptions
 import proxy.HealthService
 
@@ -39,6 +39,6 @@ object ServerConfig : VerticleConfig {
         DeploymentOptions().setInstances(Runtime.getRuntime().availableProcessors())
     }
     override val verticleCanonicalName: String by lazy {
-        ServerVerticle::class.java.canonicalName
+        HttpServerVerticle::class.java.canonicalName
     }
 }

@@ -7,16 +7,18 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         val vertx = Vertx.vertx()
-        vertx.rxDeployVerticle(
+
+        val healthServiceVerticle = vertx.rxDeployVerticle(
             HealthServiceConfig.verticleCanonicalName,
             HealthServiceConfig.deploymentOptions
         )
-            .flatMap { _ ->
-                vertx.rxDeployVerticle(
-                    ServerConfig.verticleCanonicalName,
-                    ServerConfig.deploymentOptions
-                )
-            }
+        val serverVerticle = vertx.rxDeployVerticle(
+            ServerConfig.verticleCanonicalName,
+            ServerConfig.deploymentOptions
+        )
+
+        healthServiceVerticle
+            .flatMap { serverVerticle }
             .doOnSuccess { println("Deploy finished") }
             .doOnError { e -> println("Deploy failed because ${e.message}") }
             .subscribe()

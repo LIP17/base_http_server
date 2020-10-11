@@ -1,30 +1,28 @@
 package base_http_server.service.verticles
 
-import base_http_server.common.AbstractVerticle
+import base_http_server.common.BaseVerticle
 import base_http_server.config.HealthServiceConfig
 import base_http_server.service.factory.HealthServiceFactory
+import io.reactivex.Completable
 import io.vertx.core.json.JsonObject
 import io.vertx.reactivex.ext.web.Router
 import io.vertx.reactivex.ext.web.RoutingContext
 import proxy.reactivex.HealthService
 
-class ServerVerticle : AbstractVerticle() {
+class HttpServerVerticle : BaseVerticle() {
 
     private lateinit var healthService: HealthService
 
-    override fun start(startPromise: io.vertx.core.Promise<Void>) {
+    override fun rxStart(): Completable {
         val server = vertx.createHttpServer()
         val router = configureRouting()
 
         healthService = HealthServiceFactory.createProxy(vertx.delegate, HealthServiceConfig.eventBusTopic())
 
-        server
+        return server
             .requestHandler(router)
             .rxListen(8080)
-            .doOnSuccess { _ ->
-                startPromise.complete()
-            }
-            .subscribe()
+            .ignoreElement()
     }
 
     private fun configureRouting(): Router {

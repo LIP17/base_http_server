@@ -1,20 +1,30 @@
 package base_http_server.service.verticles
 
+import base_http_server.common.BaseVerticle
 import base_http_server.config.HealthServiceConfig
 import base_http_server.service.factory.HealthServiceFactory
-import io.vertx.core.Promise
-import io.vertx.reactivex.core.AbstractVerticle
+import io.reactivex.Completable
 import io.vertx.serviceproxy.ServiceBinder
 import proxy.HealthService
 
-class HealthServiceVerticle: AbstractVerticle() {
+class HealthServiceVerticle : BaseVerticle() {
 
-    override fun start(startPromise: Promise<Void>) {
+    override val startUpTimeoutInSeconds: Long = 1L
+
+    override fun rxStart(): Completable {
         val healthServiceImpl = HealthServiceFactory.createImpl()
         val binder = ServiceBinder(vertx.delegate)
-        binder.setAddress(HealthServiceConfig.eventBusTopic()).register(HealthService::class.java, healthServiceImpl)
-            .completionHandler {
-                startPromise.complete()
-            }
+
+        return Completable.create { emitter ->
+            binder.setAddress(HealthServiceConfig.eventBusTopic())
+                .register(HealthService::class.java, healthServiceImpl)
+                .completionHandler {
+                    if (it.succeeded()) {
+                        emitter.onComplete()
+                    } else {
+                        emitter.onError(it.cause())
+                    }
+                }
+        }
     }
 }
