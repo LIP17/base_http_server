@@ -1,52 +1,64 @@
 package base_http_server.service.verticles
 
-import base_http_server.common.BaseVerticle
 import base_http_server.config.HealthServiceConfig
 import base_http_server.service.factory.HealthServiceFactory
-import io.reactivex.Completable
+import base_http_server.service.impl.isAliveAwait
 import io.vertx.core.json.JsonObject
-import io.vertx.reactivex.ext.web.Router
-import io.vertx.reactivex.ext.web.RoutingContext
-import proxy.reactivex.HealthService
+import io.vertx.ext.web.Route
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
+import io.vertx.kotlin.core.http.listenAwait
+import io.vertx.kotlin.coroutines.CoroutineVerticle
+import io.vertx.kotlin.coroutines.dispatcher
+import kotlinx.coroutines.launch
+import proxy.HealthService
 
-class HttpServerVerticle : BaseVerticle() {
+class HttpServerVerticle : CoroutineVerticle() {
 
     private lateinit var healthService: HealthService
 
-    override fun rxStart(): Completable {
+    override suspend fun start() {
         val server = vertx.createHttpServer()
         val router = configureRouting()
 
-        healthService = HealthServiceFactory.createProxy(vertx.delegate, HealthServiceConfig.eventBusTopic())
+        healthService = HealthServiceFactory.createProxy(vertx, HealthServiceConfig.eventBusTopic())
 
-        return server
+        server
             .requestHandler(router)
-            .rxListen(8080)
-            .ignoreElement()
+            .listenAwait(8080)
     }
 
     private fun configureRouting(): Router {
         val router = Router.router(vertx)
 
         val healthRouter = Router.router(vertx)
-        healthRouter.get("/").handler(::healthHandler)
+        healthRouter.get("/").coroutineHandler(::healthHandler)
 
         router.mountSubRouter("/health", healthRouter)
         return router
     }
 
-    private fun healthHandler(context: RoutingContext) {
-        healthService.rxIsAlive()
-            .doOnSuccess {
-                val response = JsonObject()
-                response.put("success", it)
-                context.response().statusCode = 200
-                context.response().putHeader("Content-Type", "application/json")
-                context.response().end(response.encode())
+    private suspend fun healthHandler(context: RoutingContext) {
+        val isAlive = healthService.isAliveAwait()
+        val response = JsonObject()
+        response.put("success", isAlive)
+        context.response().statusCode = 200
+        context.response().putHeader("Content-Type", "application/json")
+        context.response().end(response.encode())
+    }
+
+    /**
+     * An extension method for simplifying coroutines usage with Vert.x Web routers
+     */
+    private fun Route.coroutineHandler(fn: suspend (RoutingContext) -> Unit) {
+        handler { ctx ->
+            launch(ctx.vertx().dispatcher()) {
+                try {
+                    fn(ctx)
+                } catch (e: Exception) {
+                    ctx.fail(e)
+                }
             }
-            .doOnError { e ->
-                println("Error ${e.message}")
-            }
-            .subscribe()
+        }
     }
 }
