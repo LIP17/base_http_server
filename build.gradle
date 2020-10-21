@@ -29,19 +29,19 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 
     // vertex core
-    implementation group: 'io.vertx', name: 'vertx-core', version: '3.9.3'
-    implementation group: 'io.vertx', name: 'vertx-lang-kotlin', version: '3.9.3'
+    implementation group: 'io.vertx', name: 'vertx-core', version: "${vertx_version}"
+    implementation group: 'io.vertx', name: 'vertx-lang-kotlin', version: "${vertx_version}"
 
     // vertx web
-    implementation group: 'io.vertx', name: 'vertx-web', version: '3.9.3'
+    implementation group: 'io.vertx', name: 'vertx-web', version: "${vertx_version}"
 
     // service proxy
-    implementation group: 'io.vertx', name: 'vertx-service-proxy', version: '3.9.3'
-    compileOnly group: 'io.vertx', name: 'vertx-codegen', version: '3.9.3'
+    implementation group: 'io.vertx', name: 'vertx-service-proxy', version: "${vertx_version}"
+    compileOnly group: 'io.vertx', name: 'vertx-codegen', version: "${vertx_version}"
     kapt("io.vertx:vertx-codegen:3.9.3:processor") // in plugin, include kapt, with this and codegen dependency to generate proxy class
 
     // coroutine
-    implementation group: 'io.vertx', name: 'vertx-lang-kotlin-coroutines', version: '3.9.3'
+    implementation group: 'io.vertx', name: 'vertx-lang-kotlin-coroutines', version: "${vertx_version}"
 
     // test
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
