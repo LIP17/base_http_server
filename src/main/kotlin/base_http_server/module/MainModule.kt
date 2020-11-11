@@ -6,7 +6,6 @@ class MainModule: AbstractModule() {
 
     override fun configure() {
         install(VertxModule())
-        install(HealthServiceModule())
     }
 
 }

@@ -4,10 +4,8 @@ plugins {
     id 'distribution'
     id 'application'
     id 'org.jlleitschuh.gradle.ktlint' version '9.4.0'
-    id "org.jetbrains.kotlin.kapt" version '1.4.10'
 }
 
-apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 group 'lip17.base_http_server'
@@ -34,11 +32,6 @@ dependencies {
 
     // vertx web
     implementation group: 'io.vertx', name: 'vertx-web', version: "${vertx_version}"
-
-    // service proxy
-    implementation group: 'io.vertx', name: 'vertx-service-proxy', version: "${vertx_version}"
-    compileOnly group: 'io.vertx', name: 'vertx-codegen', version: "${vertx_version}"
-    kapt("io.vertx:vertx-codegen:3.9.3:processor") // in plugin, include kapt, with this and codegen dependency to generate proxy class
 
     // coroutine
     implementation group: 'io.vertx', name: 'vertx-lang-kotlin-coroutines', version: "${vertx_version}"

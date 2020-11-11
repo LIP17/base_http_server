@@ -4,8 +4,8 @@ import com.google.inject.Inject
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
-import io.vertx.kotlin.core.http.listenAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
+import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,7 +18,8 @@ class HttpServerVerticle @Inject constructor(
         vertx
             .createHttpServer()
             .requestHandler(router)
-            .listenAwait(8080)
+            .listen(8080)
+            .await()
     }
 }
 
