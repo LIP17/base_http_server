@@ -1,14 +1,15 @@
 package base_http_server.service.impl
 
+import com.google.inject.Singleton
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.Handler
 import io.vertx.kotlin.coroutines.awaitResult
-import proxy.HealthService
 
-class HealthServiceImpl : HealthService {
+@Singleton
+class HealthService {
 
-    override fun isAlive(handler: Handler<AsyncResult<Boolean>>): HealthService {
+    fun isAlive(handler: Handler<AsyncResult<Boolean>>): HealthService {
         handler.handle(Future.succeededFuture(true))
         return this
     }
